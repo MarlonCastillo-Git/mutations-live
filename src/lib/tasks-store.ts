@@ -77,3 +77,22 @@ export async function toogleTask(id: string): Promise<void> {
     if (!tarea) throw new Error(`No existe la tarea con id ${id}`);
     tarea.completada = !tarea.completada;
 }
+
+
+export async function getEstadisticas() {
+    await sleep(2200); // simula un reporte agregado "pesado"
+    const total = tasks.length;
+    const completadas = tasks.filter((t) => t.completada).length;
+    const porPrioridad = {
+    alta: tasks.filter((t) => t.prioridad === "alta").length,
+    media: tasks.filter((t) => t.prioridad === "media").length,
+    baja: tasks.filter((t) => t.prioridad === "baja").length,
+    };
+    return { total, completadas, porPrioridad };
+}
+
+
+export async function getUltimasTareas(): Promise<Task[]> {
+    await sleep(1100); // delay distinto al de getEstadisticas, a propósito
+    return [...tasks].sort((a, b) => b.creadaEn - a.creadaEn).slice(0, 3);
+}
